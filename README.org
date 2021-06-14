@@ -1,0 +1,53 @@
+* Really simple FTP application
+
+  A simple program for transferring files, consisting of a =client= and a =server=
+
+** Building instructions
+
+   Just type =make=.
+
+   #+begin_src bash :results output
+     make clean
+     make
+   #+end_src
+
+   #+RESULTS:
+   : rm -f client.o server.o sftp.o server client TAGS tags
+   : cc -Wall -Wextra -fstack-protector-all -std=gnu18 -D_FORTIFY_SOURCE=2 -O2   -c -o sftp.o sftp.c
+   : cc -Wall -Wextra -fstack-protector-all -std=gnu18 -D_FORTIFY_SOURCE=2 -O2   -c -o server.o server.c
+   : cc   server.o sftp.o   -o server
+   : cc -Wall -Wextra -fstack-protector-all -std=gnu18 -D_FORTIFY_SOURCE=2 -O2   -c -o client.o client.c
+   : cc   client.o sftp.o   -o client
+
+** Running
+
+   To start the server just run the program.
+
+   #+begin_src shell
+     ./server
+   #+end_src
+
+   #+RESULTS:
+   : ./server [INFO]    09:09:35: waiting for connections
+
+   To start the client pass it the address of the server.  When debugging this can be =localhost= (or equivalent).
+
+   #+begin_src shell
+     ./client localhost
+   #+end_src
+   #+RESULTS:
+   : ./client [WARNING] 09:12:59: connect: Connection refused
+   : ./client [INFO]    09:12:59: connecting to 127.0.0.1
+   : $ done
+
+  Once connected the client will display a =$= prompt and commands can be typed into the prompt. 
+
+** Commands
+
+   Commands can be typed into the =client= prompt.  The following commands are supported.
+
+   - =$ done= :: Ends the session
+   - =$ list [path]= :: lists what files are available at =path= (if omitted =.=)
+   - =$ get file [into]= :: transfers the =file= from the server =into= the file on the client (by default the same name as the file in the current directory). 
+   - =$ put file [into]= :: transfers the =file= from the client =into= the file on the server (by default the same name as the file in the server's current directory). 
+     
