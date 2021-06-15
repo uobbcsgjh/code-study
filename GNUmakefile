@@ -4,7 +4,7 @@ TAGS = ctags
 .PHONY: all clean debug lint
 .DEFAULT: all
 
-all: server client package.tar.gz
+all: server client
 clean:
 	rm -f $(wildcard *.o) server client TAGS tags
 
@@ -27,12 +27,6 @@ client: client.o sftp.o
 server.o: server.c server.h sftp.h sftp.o
 client.o: client.c client.h sftp.h sftp.o
 sftp.o: sftp.c sftp.h
-
-package.tar.gz: $(wildcard *.c) $(wildcard *.h)
-	@mkdir -p package
-	rm -rf package/*
-	cp -r logs server.c server.h sftp.c sftp.h client.c client.h GNUmakefile package/
-	tar czf $@ package 
 
 lint:
 	rats server.c client.c sftp.c
